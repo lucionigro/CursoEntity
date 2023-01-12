@@ -20,6 +20,7 @@ namespace CursoEntity.Datos
         //Despues update-database y listo
         public DbSet<Categoria> Categoria { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
+        public DbSet<Articulo> Articulo { get; set; }
 
     }
 }
