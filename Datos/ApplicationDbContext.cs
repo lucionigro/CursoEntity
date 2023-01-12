@@ -9,9 +9,7 @@ namespace CursoEntity.Datos
         {
 
         }
-
         // Escribir modelos
-
         //Cuando crear migraciones (buenas practicas)
         //1- Cuando se crea una nueva clase == tabla en la DB
         //2- Cuando agregue una nueva propiedad (crear un campo nuevo en la base de datos)
