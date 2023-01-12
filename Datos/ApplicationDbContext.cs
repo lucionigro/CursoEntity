@@ -14,6 +14,10 @@ namespace CursoEntity.Datos
         //1- Cuando se crea una nueva clase == tabla en la DB
         //2- Cuando agregue una nueva propiedad (crear un campo nuevo en la base de datos)
         //3- Cuando modifique un valor de campo en la clase (modificar un campo en BD)
+
+        //Como crear migraciones:
+        //En la terminal add-migration "nombre de migracion"
+        //Despues update-database y listo
         public DbSet<Categoria> Categoria { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
 

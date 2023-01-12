@@ -4,11 +4,9 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 
-//Configurar conexion a SQL server
+//Configurar conexion a SQL server IMPORTANTE
 builder.Services.AddDbContext<ApplicationDbContext>(opciones =>
     opciones.UseSqlServer(builder.Configuration.GetConnectionString("ConexionSQl"))
-    
-    
     );
 
 
