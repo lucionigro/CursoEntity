@@ -4,11 +4,10 @@ namespace CursoEntity.Models
 {
     public class Categoria
     {
-
-        [Key]
         public int Categoria_Id { get; set; }
-        [Required]
         public string Nombre { get; set; }
+        public DateTime FechaCreacion { get; set; } 
+        public bool Activo { get; set; }
         public List<Articulo> Articulo { get; set; }
     }
 }

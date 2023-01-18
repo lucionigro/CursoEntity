@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CursoEntity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230117125329_FkManyToManyCategoriaArticulo")]
-    partial class FkManyToManyCategoriaArticulo
+    [Migration("20230118135718_MigracionInicalFluenAPI")]
+    partial class MigracionInicalFluenAPI
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,19 +44,34 @@ namespace CursoEntity.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<string>("TituloArticulo")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
                         .HasColumnName("Titulo");
 
                     b.HasKey("ArticuloID");
 
                     b.HasIndex("Categoria_Id");
 
-                    b.ToTable("Articulo");
+                    b.ToTable("Tbl_Articulo", (string)null);
+                });
+
+            modelBuilder.Entity("CursoEntity.Models.ArticuloEtiqueta", b =>
+                {
+                    b.Property<int>("Etiqueta_ID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ArticuloID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Etiqueta_ID", "ArticuloID");
+
+                    b.HasIndex("ArticuloID");
+
+                    b.ToTable("ArticuloEtiqueta");
                 });
 
             modelBuilder.Entity("CursoEntity.Models.Categoria", b =>
@@ -66,6 +81,12 @@ namespace CursoEntity.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Categoria_Id"), 1L, 1);
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("date");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -86,22 +107,36 @@ namespace CursoEntity.Migrations
 
                     b.Property<string>("Cedula")
                         .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Deporte")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Mascota")
-                        .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DetalleUsuario_ID");
 
                     b.ToTable("DetalleUsuario");
+                });
+
+            modelBuilder.Entity("CursoEntity.Models.Etiqueta", b =>
+                {
+                    b.Property<int>("Etiqueta_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Etiqueta_ID"), 1L, 1);
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Titulo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Etiqueta_ID");
+
+                    b.ToTable("Etiqueta");
                 });
 
             modelBuilder.Entity("CursoEntity.Models.Usuario", b =>
@@ -112,25 +147,23 @@ namespace CursoEntity.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Apellido")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DetalleUsuario_ID")
+                    b.Property<int?>("DetalleUsuario_ID")
                         .HasColumnType("int");
 
+                    b.Property<string>("Direccion")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DetalleUsuario_ID")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[DetalleUsuario_ID] IS NOT NULL");
 
                     b.ToTable("Usuario");
                 });
@@ -146,15 +179,37 @@ namespace CursoEntity.Migrations
                     b.Navigation("Categoria");
                 });
 
+            modelBuilder.Entity("CursoEntity.Models.ArticuloEtiqueta", b =>
+                {
+                    b.HasOne("CursoEntity.Models.Articulo", "Articulo")
+                        .WithMany("ArticuloEtiqueta")
+                        .HasForeignKey("ArticuloID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CursoEntity.Models.Etiqueta", "Etiqueta")
+                        .WithMany("ArticuloEtiqueta")
+                        .HasForeignKey("Etiqueta_ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Articulo");
+
+                    b.Navigation("Etiqueta");
+                });
+
             modelBuilder.Entity("CursoEntity.Models.Usuario", b =>
                 {
                     b.HasOne("CursoEntity.Models.DetalleUsuario", "DetalleUsuario")
                         .WithOne("Usuario")
-                        .HasForeignKey("CursoEntity.Models.Usuario", "DetalleUsuario_ID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CursoEntity.Models.Usuario", "DetalleUsuario_ID");
 
                     b.Navigation("DetalleUsuario");
+                });
+
+            modelBuilder.Entity("CursoEntity.Models.Articulo", b =>
+                {
+                    b.Navigation("ArticuloEtiqueta");
                 });
 
             modelBuilder.Entity("CursoEntity.Models.Categoria", b =>
@@ -164,8 +219,12 @@ namespace CursoEntity.Migrations
 
             modelBuilder.Entity("CursoEntity.Models.DetalleUsuario", b =>
                 {
-                    b.Navigation("Usuario")
-                        .IsRequired();
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("CursoEntity.Models.Etiqueta", b =>
+                {
+                    b.Navigation("ArticuloEtiqueta");
                 });
 #pragma warning restore 612, 618
         }
