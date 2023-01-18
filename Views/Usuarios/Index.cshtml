@@ -1,0 +1,50 @@
+﻿@model IEnumerable<CursoEntity.Models.Usuario>
+@{
+    ViewData["Title"] = "Lista de usuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-4">
+        <h3>Lista de usuarios</h3>
+    </div>
+    <div class="col-3">
+        <a asp-action="Crear" class="btn btn-primary form-control">Crear usuario</a>
+    </div>
+</div>
+
+
+<div>
+    @if (Model.Count() > 0)
+    {
+        <table class="table table-striped border">
+            <tr>
+                <th>@Html.DisplayNameFor(u => u.Id)</th>
+                <th>@Html.DisplayNameFor(u => u.Nombre)</th>
+                <th>@Html.DisplayNameFor(u => u.Apellido)</th>
+                <th>@Html.DisplayNameFor(u => u.Email)</th>
+                
+                <th></th>
+            </tr>
+            @foreach (var usuario in Model)
+            {
+                <tr>
+                    <td>@usuario.Id</td>
+                    <td>@usuario.Nombre</td>
+                    <td>@usuario.Apellido</td>
+                    <td>@usuario.Email</td>
+                   
+                    <td>
+                        <a class="btn btn-primary text-white" asp-action="Editar" asp-route-id="@usuario.Id">Editar</a>
+                        <a class="btn btn-secondary text-white" asp-action="Detalle" asp-route-id="@usuario.Id">Detalle</a>
+                        <a class="btn btn-danger text-white" asp-action="Borrar" asp-route-id="@usuario.Id">Borrar</a>
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>No hay usuarios</p>
+    }
+</div>

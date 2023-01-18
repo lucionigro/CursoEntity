@@ -1,8 +1,14 @@
-﻿namespace CursoEntity.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CursoEntity.Models
 {
     public class Categoria
     {
-        public int Id { get; set; }
+
+        [Key]
+        public int Categoria_Id { get; set; }
+        [Required]
         public string Nombre { get; set; }
+        public List<Articulo> Articulo { get; set; }
     }
 }
